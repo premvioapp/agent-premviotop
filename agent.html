@@ -531,8 +531,8 @@ function staffLogin(container, roleLabel, allowed, onOk) {
     <div class="card">
       <h2 class="center">${esc(roleLabel)} login</h2>
       <form id="slForm">
-        <label>${esc(roleLabel)} ID</label><input name="email" required autocomplete="username" placeholder="${roleLabel === "Admin" ? "AD1001" : "AG1002"}" style="text-transform:uppercase">
-        <label>Password</label><input type="password" name="password" required autocomplete="current-password">
+        <label>${esc(roleLabel)} ID</label><input name="email" required autocomplete="off" autocapitalize="characters" spellcheck="false" style="text-transform:uppercase">
+        <label>Password</label><input type="password" name="password" required autocomplete="off">
         <label>Security check</label><div id="slCap"></div>
         <button class="btn block mt">Log in</button>
       </form>
@@ -594,6 +594,35 @@ const COUNTRIES = "Nepal|India|Bangladesh|Bhutan|Pakistan|Sri Lanka|Maldives|Afg
 function countryOptions(selected = "Nepal") {
   return COUNTRIES.map((c) => `<option ${c === selected ? "selected" : ""}>${esc(c)}</option>`).join("");
 }
+/* ---------- date range (calendar) for history pages ---------- */
+function ymd(d) { const z = new Date(d.getTime() - d.getTimezoneOffset() * 6e4); return z.toISOString().slice(0, 10); }
+function defaultRange(days = 30) { const to = new Date(); return { from: ymd(new Date(to.getTime() - (days - 1) * 864e5)), to: ymd(to) }; }
+function rangeISO(r) {
+  const a = new Date(r.from + "T00:00:00"), b = new Date(new Date(r.to + "T00:00:00").getTime() + 864e5);
+  return [a.toISOString(), b.toISOString()];
+}
+function rangeBar(r) {
+  return `<div class="toolbar range-bar">
+    <label class="row small" style="margin:0;gap:6px">From <input type="date" data-r="from" value="${r.from}" max="${r.to}" style="width:auto"></label>
+    <label class="row small" style="margin:0;gap:6px">To <input type="date" data-r="to" value="${r.to}" min="${r.from}" max="${ymd(new Date())}" style="width:auto"></label>
+    <button type="button" class="btn sm soft" data-preset="1">Today</button>
+    <button type="button" class="btn sm soft" data-preset="7">7 days</button>
+    <button type="button" class="btn sm soft" data-preset="30">30 days</button>
+    <button type="button" class="btn sm soft" data-preset="90">90 days</button>
+  </div>`;
+}
+// wire a rangeBar inside `root`: calls onChange(newRange) when dates change
+function bindRange(root, r, onChange) {
+  $$("[data-r]", root).forEach((inp) => (inp.onchange = () => {
+    const nr = { ...r, [inp.dataset.r]: inp.value };
+    if (!nr.from || !nr.to) return;
+    if (nr.from > nr.to) return toast("'From' must be before 'To'.", "error");
+    onChange(nr);
+  }));
+  $$("[data-preset]", root).forEach((b) => (b.onclick = () => onChange(defaultRange(Number(b.dataset.preset)))));
+}
+function fmtDay(s) { return new Date(s + "T00:00:00").toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }); }
+
 function copyText(t) {
   navigator.clipboard?.writeText(t).then(() => toast("Copied: " + t, "success"), () => toast(t));
 }
@@ -752,17 +781,29 @@ function showWithdrawal(w) {
   };
 }
 
-/* -------- Agent's own history -------- */
+/* -------- Agent's own history: customer top-ups & withdrawals only -------- */
 async function viewHistory(v) {
-  v.innerHTML = `<div class="card"><h2>My activity</h2><p class="muted small">Last 30 days</p><div id="ah"><div class="loader"></div></div></div>`;
-  const { data, error } = await sb.rpc("agent_recent");
+  if (!A.range) A.range = defaultRange(30);
+  const r = A.range;
+  v.innerHTML = `<div class="card"><h2>My transactions</h2>
+    <p class="muted small">Customer top-ups and customer withdrawals · ${fmtDay(r.from)} – ${fmtDay(r.to)}</p>
+    ${rangeBar(r)}<div id="ah"><div class="loader"></div></div></div>`;
+  bindRange(v, r, (nr) => { A.range = nr; viewHistory(v); });
+  const [from, to] = rangeISO(r);
+  const { data, error } = await sb.rpc("agent_recent", { p_from: from, p_to: to });
   if (error) { $("#ah").innerHTML = `<div class="empty">${esc(errMsg(error))}</div>`; return; }
-  const label = { agent_load: "Deposit to customer", agent_payout: "Withdrawal paid", load: "Deposit to customer", adjust: "Admin deposit / withdrawal", purchase: "Purchase", refund: "Refund", withdraw: "Withdraw" };
-  $("#ah").innerHTML = data.length ? data.map((t) => `<div class="list-item">
+  const label = { agent_load: "Customer top-up", agent_payout: "Customer withdrawal" };
+  const tops = data.filter((t) => t.type === "agent_load"), wds = data.filter((t) => t.type === "agent_payout");
+  const sum = (l) => l.reduce((a, t) => a + Math.abs(Number(t.amount)), 0);
+  $("#ah").innerHTML = `<div class="info-grid mb">
+      <div><div class="k">Top-ups (${tops.length})</div><div class="v" style="color:var(--green)">${money(sum(tops))}</div></div>
+      <div><div class="k">Withdrawals (${wds.length})</div><div class="v" style="color:var(--red)">${money(sum(wds))}</div></div></div>` +
+    (data.length ? data.map((t) => `<div class="list-item">
+    <div class="ic">${t.type === "agent_load" ? "💰" : "🏧"}</div>
     <div class="grow"><b>${esc(label[t.type] || t.type)}</b><div class="small muted">${esc(t.description || "")}</div>
     <div class="small muted">${fmtDate(t.created_at)}</div></div>
-    <div class="${t.amount >= 0 ? "amt-pos" : "amt-neg"}">${t.amount >= 0 ? "+" : "−"}${money(Math.abs(t.amount))}</div></div>`).join("")
-    : `<div class="empty"><div class="big">🗂️</div>No activity yet</div>`;
+    <div style="font-weight:800;color:${t.type === "agent_load" ? "var(--green)" : "var(--red)"}">${money(Math.abs(t.amount))}</div></div>`).join("")
+    : `<div class="empty"><div class="big">🗂️</div>No transactions in these dates</div>`);
 }
 
 /* -------- Agent's own profile -------- */
