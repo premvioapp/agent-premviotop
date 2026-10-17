@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#060b1a">
+<meta name="theme-color" content="#0a0e13">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-<style>body{background:#060b1a;color:#eef3ff}</style>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+<style>body{background:#0a0e13;color:#e8f1ee}</style>
 <script>
 function pvFatal(m){var r=document.getElementById('root');if(!r)return;r.innerHTML='<div style="max-width:460px;margin:60px auto;padding:20px;border-radius:14px;background:#2a0f16;color:#ffd7dc;font-family:system-ui,sans-serif;line-height:1.5"><b style="font-size:1.1rem">Premvio could not start</b><p style="margin:10px 0 0">'+String(m).replace(/</g,'&lt;')+'</p></div>';window.pvDead=true;}
 window.addEventListener('error',function(e){if(e.message&&!window.pvDead)pvFatal(e.message+' — '+String(e.filename||'').split('/').pop()+' line '+e.lineno);},true);
@@ -309,6 +309,31 @@ td .btn + .btn { margin-left: 6px; }
   .grid-2 { grid-template-columns: 1fr; }
 }
 
+/* ---------- refunds ---------- */
+.badge.refunded { background: rgba(31, 162, 255, .15); color: var(--blue); }
+.badge.requested { background: rgba(255, 159, 67, .15); color: var(--orange); }
+.refund-box { margin-top: 6px; padding: 8px 10px; border-radius: 10px; background: var(--card-2); font-size: .82rem; }
+
+/* ---------- product search ---------- */
+.search-box { position: relative; margin: 10px 0 14px; }
+.search-box svg { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--muted); pointer-events: none; }
+.search-box input { padding-left: 40px; padding-right: 40px; }
+.search-box .clear { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; border: 0;
+  border-radius: 8px; background: transparent; color: var(--muted); cursor: pointer; display: grid; place-items: center; }
+.search-box .clear svg { position: static; transform: none; }
+
+/* ---------- searchable pick list (city / street) ---------- */
+.ac { position: relative; }
+.ac-list {
+  position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 60; max-height: 240px; overflow-y: auto;
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); padding: 4px;
+}
+.ac-item { display: block; width: 100%; text-align: left; padding: 10px 12px; border: 0; background: none; color: var(--text);
+  font: inherit; border-radius: 9px; cursor: pointer; }
+.ac-item:hover, .ac-item.on { background: var(--card-2); }
+.ac-item b { color: var(--blue); }
+.ac-empty { padding: 10px 12px; color: var(--muted); font-size: .9rem; }
+
 /* ---------- v2 additions ---------- */
 .btn.deposit { background: linear-gradient(135deg, #2ee59d, #16b46f); color: #04220f; }
 .btn.withdraw { background: linear-gradient(135deg, #ff6b78, #e23a4b); color: #fff; }
@@ -328,11 +353,88 @@ td .btn + .btn { margin-left: 6px; }
 .kv span { color: var(--muted); }
 .back-link { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 12px; }
 
+/* =====================================================================
+   AGENT PANEL — its own look ("cashier desk"): graphite + emerald,
+   Space Grotesk text, JetBrains Mono numbers. Scoped to body.agent-ui
+   ===================================================================== */
+.agent-ui {
+  --bg: #0a0e13; --bg-2: #0f151c; --card: #121a22; --card-2: #19232d;
+  --line: rgba(110, 231, 190, .13); --text: #e8f1ee; --muted: #84968f;
+  --blue: #14d9a4; --blue-2: #0ea5a4; --grad: linear-gradient(135deg, #19e3ad 0%, #0ea5a4 100%);
+  --radius: 12px; --shadow: 0 8px 22px rgba(0, 0, 0, .4);
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  background:
+    radial-gradient(1200px 500px at 100% -10%, rgba(20, 217, 164, .08), transparent 60%),
+    repeating-linear-gradient(0deg, transparent 0 31px, rgba(255, 255, 255, .018) 31px 32px),
+    var(--bg);
+  background-attachment: fixed;
+}
+.agent-ui .mono, .agent-ui .num, .agent-ui .amt-pos, .agent-ui .amt-neg { font-family: var(--mono); letter-spacing: 0; }
+.agent-ui .card { border-radius: 12px; box-shadow: none; }
+.agent-ui .btn { border-radius: 10px; letter-spacing: .01em; }
+.agent-ui input, .agent-ui select { border-radius: 10px; }
+.agent-ui .auth-logo { filter: drop-shadow(0 10px 30px rgba(20, 217, 164, .3)); }
+.agent-ui .tabs { background: transparent; border-bottom: 1px solid var(--line); border-radius: 0; padding: 0; gap: 4px; }
+.agent-ui .tabs button { border-radius: 0; padding: 12px 4px; white-space: nowrap; border-bottom: 2px solid transparent; font-weight: 600; }
+.agent-ui .tabs button.on { background: transparent; box-shadow: none; color: var(--blue); border-bottom-color: var(--blue); }
+
+/* header */
+.desk-head { display: flex; align-items: center; gap: 12px; padding: 14px 0 12px; position: sticky; top: 0; z-index: 20;
+  background: linear-gradient(var(--bg) 75%, transparent); }
+.desk-head img { width: 38px; height: 38px; }
+.desk-tag { font-family: var(--mono); font-size: .66rem; font-weight: 800; letter-spacing: .16em; color: #04140f;
+  background: var(--grad); padding: 3px 8px; border-radius: 6px; }
+.desk-name { font-weight: 700; font-size: 1.05rem; line-height: 1.2; }
+.desk-sub { font-size: .78rem; color: var(--muted); font-family: var(--mono); }
+.desk-head .icon-btn { border-radius: 10px; }
+
+/* balance "register" display */
+.register { position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin-bottom: 14px;
+  background: linear-gradient(180deg, #0f1a17 0%, #0d1419 100%); }
+.register::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--grad); }
+.register .top { padding: 16px 18px 12px 22px; }
+.register .lbl { font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.register .big { font-family: var(--mono); font-weight: 800; font-size: 2.1rem; color: #b8ffe8; margin-top: 2px;
+  text-shadow: 0 0 22px rgba(20, 217, 164, .35); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.register .big small { font-size: .9rem; color: var(--muted); margin-right: 6px; text-shadow: none; }
+.register .hint { font-size: .78rem; color: var(--muted); margin-top: 4px; }
+.register .strip { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px dashed var(--line); }
+.register .strip > div { padding: 10px 18px 12px 22px; }
+.register .strip > div + div { border-left: 1px dashed var(--line); padding-left: 18px; }
+.register .strip .k { font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.register .strip .v { font-family: var(--mono); font-weight: 700; font-size: 1rem; margin-top: 2px; }
+.register .strip .v.in { color: var(--green); } .register .strip .v.out { color: var(--red); }
+.register .strip .c { font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+
+/* big action tiles */
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.tile { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 16px; border-radius: 14px; cursor: pointer;
+  border: 1px solid; font: inherit; text-align: left; transition: transform .1s, filter .15s; }
+.tile:active { transform: scale(.98); }
+.tile:hover { filter: brightness(1.1); }
+.tile .ti { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; }
+.tile .ti svg { width: 22px; height: 22px; }
+.tile b { font-size: 1.05rem; }
+.tile span { font-size: .78rem; opacity: .8; }
+.tile.deposit { background: rgba(34, 201, 131, .1); border-color: rgba(34, 201, 131, .35); color: #b6f5d8; }
+.tile.deposit .ti { background: var(--green); color: #03200f; }
+.tile.withdraw { background: rgba(255, 93, 108, .1); border-color: rgba(255, 93, 108, .35); color: #ffd0d5; }
+.tile.withdraw .ti { background: var(--red); color: #fff; }
+.tile.on { outline: 2px solid currentColor; outline-offset: 2px; }
+
+/* bigger mono inputs for codes and amounts */
+.agent-ui input[name="code"], .agent-ui input[name="amount"] { font-family: var(--mono); font-size: 1.15rem; letter-spacing: .08em; }
+.agent-ui .code-box { border-color: var(--blue); background: rgba(20, 217, 164, .06); }
+.agent-ui .code-box .code { color: #b8ffe8; font-family: var(--mono); }
+.agent-ui .setting-row b { font-weight: 600; }
+.agent-ui .list-item .ic { border-radius: 10px; }
+
 </style>
 <title>Premvio Agent</title>
 <meta name="robots" content="noindex">
 </head>
-<body>
+<body class="agent-ui">
 <div id="root"><div class="loader"></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -586,6 +688,7 @@ const ICONS = {
   cash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 10v4M18 10v4"/></svg>',
   list: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>',
   plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
   star: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z"/></svg>',
 };
 
@@ -594,6 +697,45 @@ const COUNTRIES = "Nepal|India|Bangladesh|Bhutan|Pakistan|Sri Lanka|Maldives|Afg
 function countryOptions(selected = "Nepal") {
   return COUNTRIES.map((c) => `<option ${c === selected ? "selected" : ""}>${esc(c)}</option>`).join("");
 }
+/* ---------- searchable pick list: type "p" → every option starting with p ---------- */
+// input: <input>, getOptions(): string[], onPick(value): optional
+function mountPicker(input, getOptions, onPick) {
+  const wrap = document.createElement("div");
+  wrap.className = "ac";
+  input.parentNode.insertBefore(wrap, input);
+  wrap.appendChild(input);
+  input.setAttribute("autocomplete", "off");
+  const list = document.createElement("div");
+  list.className = "ac-list hidden";
+  wrap.appendChild(list);
+  let active = -1, shown = [];
+  const close = () => { list.classList.add("hidden"); active = -1; };
+  const draw = () => {
+    const q = input.value.trim().toLowerCase();
+    const all = getOptions();
+    shown = all.filter((o) => o.toLowerCase().startsWith(q));
+    if (!all.length) { close(); return; }
+    list.innerHTML = shown.length
+      ? shown.map((o, i) => `<button type="button" class="ac-item ${i === active ? "on" : ""}" data-i="${i}"><b>${esc(o.slice(0, q.length))}</b>${esc(o.slice(q.length))}</button>`).join("")
+      : `<div class="ac-empty">No match for “${esc(input.value.trim())}”</div>`;
+    list.classList.remove("hidden");
+  };
+  const pick = (v) => { input.value = v; close(); onPick && onPick(v); };
+  input.addEventListener("focus", () => { active = -1; draw(); });
+  input.addEventListener("input", () => { active = -1; draw(); onPick && onPick(null); });
+  input.addEventListener("keydown", (e) => {
+    if (list.classList.contains("hidden")) return;
+    if (e.key === "ArrowDown") { active = Math.min(active + 1, shown.length - 1); draw(); e.preventDefault(); }
+    else if (e.key === "ArrowUp") { active = Math.max(active - 1, 0); draw(); e.preventDefault(); }
+    else if (e.key === "Enter" && active >= 0) { pick(shown[active]); e.preventDefault(); }
+    else if (e.key === "Escape") close();
+  });
+  list.addEventListener("mousedown", (e) => e.preventDefault()); // keep focus while choosing
+  list.addEventListener("click", (e) => { const b = e.target.closest(".ac-item"); if (b) pick(shown[Number(b.dataset.i)]); });
+  input.addEventListener("blur", () => setTimeout(close, 120));
+  return { refresh: draw };
+}
+
 /* ---------- date range (calendar) for history pages ---------- */
 function ymd(d) { const z = new Date(d.getTime() - d.getTimezoneOffset() * 6e4); return z.toISOString().slice(0, 10); }
 function defaultRange(days = 30) { const to = new Date(); return { from: ymd(new Date(to.getTime() - (days - 1) * 864e5)), to: ymd(to) }; }
@@ -647,27 +789,36 @@ sb.auth.getSession().then(async ({ data }) => {
 const AGENT_TABS = [
   { id: "load", label: "Deposit", icon: ICONS.cash },
   { id: "withdraw", label: "Withdrawal", icon: ICONS.wallet },
-  { id: "history", label: "My history", icon: ICONS.clock },
-  { id: "profile", label: "My profile", icon: ICONS.users },
+  { id: "history", label: "History", icon: ICONS.clock },
+  { id: "profile", label: "Profile", icon: ICONS.users },
 ];
 
 function start(p) {
   A.me = p;
   applyTheme("dark");
+  document.body.classList.add("agent-ui");
   root.innerHTML = `
   <div class="app">
-    <header class="topbar">
+    <header class="desk-head">
       <img src="${PV_LOGO}" alt="">
-      <div class="grow"><div class="title">Agent panel</div><div class="small muted">${esc(p.full_name)} · <b class="mono">${esc(p.member_id)}</b>${p.city ? " · " + esc(p.city) : ""}</div></div>
+      <div class="grow"><div class="row" style="gap:8px"><span class="desk-tag">AGENT</span><span class="desk-name">${esc(p.full_name)}</span></div>
+        <div class="desk-sub">${esc(p.member_id)}${p.city ? " · " + esc(p.city) : ""}${p.street ? ", " + esc(p.street) : ""}</div></div>
       <button class="icon-btn" id="push" title="Notifications">${ICONS.bell}</button>
       <button class="icon-btn" id="out" title="Log out">${ICONS.logout}</button>
     </header>
-    ${p.role === "agent" ? `<div class="balance-card mb"><div class="label">Your agent balance</div>
-      <div class="amount" data-balance>${money(p.balance)}</div>
-      <div class="member">Depositing to a customer uses this balance. Paying a withdrawal adds to it.</div></div>` : ""}
-    <div class="money-actions mb">
-      <button class="btn deposit" data-go="load">${ICONS.cash} Deposit</button>
-      <button class="btn withdraw" data-go="withdraw">${ICONS.wallet} Withdrawal</button></div>
+    <div class="register">
+      <div class="top"><div class="lbl">${p.role === "agent" ? "Cash float · agent balance" : "Admin using agent desk"}</div>
+        <div class="big"><small>${CFG.CURRENCY}</small><span data-balance>${p.role === "agent" ? amountOnly(p.balance) : "—"}</span></div>
+        <div class="hint">Top-up to a customer uses this balance · paying a withdrawal adds to it</div></div>
+      <div class="strip">
+        <div><div class="k">Today · top-ups</div><div class="v in" id="tIn">—</div><div class="c" id="tInC"></div></div>
+        <div><div class="k">Today · withdrawals</div><div class="v out" id="tOut">—</div><div class="c" id="tOutC"></div></div>
+      </div>
+    </div>
+    <div class="tiles">
+      <button class="tile deposit" data-go="load"><div class="ti">${ICONS.cash}</div><div><b>Deposit</b><br><span>Top up a customer</span></div></button>
+      <button class="tile withdraw" data-go="withdraw"><div class="ti">${ICONS.wallet}</div><div><b>Withdrawal</b><br><span>Pay out a code</span></div></button>
+    </div>
     <div class="tabs mb">${AGENT_TABS.map((t) => `<button data-t="${t.id}">${t.label}</button>`).join("")}</div>
     <main id="view"></main>
   </div>`;
@@ -678,14 +829,30 @@ function start(p) {
   A.channel = sb.channel("agent-" + p.id)
     .on("postgres_changes", { event: "UPDATE", schema: "public", table: "profiles", filter: `id=eq.${p.id}` }, (x) => {
       A.me = { ...A.me, ...x.new };
-      $$("[data-balance]").forEach((el) => (el.textContent = money(A.me.balance)));
+      $$("[data-balance]").forEach((el) => (el.textContent = A.me.role === "agent" ? amountOnly(A.me.balance) : "—"));
     }).subscribe();
   if (pushSupported() && Notification.permission === "granted") enablePush(true);
   render();
+  refreshToday();
+}
+
+function amountOnly(n) { return Number(n || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+
+// Today's totals in the register strip
+async function refreshToday() {
+  const [from, to] = rangeISO(defaultRange(1));
+  const { data } = await sb.rpc("agent_recent", { p_from: from, p_to: to });
+  const list = data || [];
+  const tops = list.filter((t) => t.type === "agent_load"), wds = list.filter((t) => t.type === "agent_payout");
+  const sum = (l) => l.reduce((a, t) => a + Math.abs(Number(t.amount)), 0);
+  if (!$("#tIn")) return;
+  $("#tIn").textContent = amountOnly(sum(tops)); $("#tInC").textContent = tops.length + (tops.length === 1 ? " customer" : " customers");
+  $("#tOut").textContent = amountOnly(sum(wds)); $("#tOutC").textContent = wds.length + (wds.length === 1 ? " payout" : " payouts");
 }
 
 function render() {
   $$(".tabs button").forEach((b) => b.classList.toggle("on", b.dataset.t === A.tab));
+  $$(".tile").forEach((b) => b.classList.toggle("on", b.dataset.go === A.tab));
   const v = $("#view");
   ({ load: viewLoad, withdraw: viewWithdraw, history: viewHistory, profile: viewProfile })[A.tab](v);
 }
@@ -733,6 +900,7 @@ function showCustomer(c) {
       const { error } = await sb.rpc("agent_load_customer", { p_member_id: c.member_id, p_amount: amt });
       if (error) throw error;
       toast(`${money(amt)} deposited to ${c.full_name}.`, "success");
+      refreshToday();
       $("#cust").innerHTML = `<div class="empty"><div class="big">✅</div><b>${money(amt)}</b> deposited to ${esc(c.full_name)}</div>`;
     });
   };
@@ -776,6 +944,7 @@ function showWithdrawal(w) {
       const { error } = await sb.rpc("agent_complete_withdrawal", { p_code: w.code });
       if (error) throw error;
       toast("Withdrawal completed.", "success");
+      refreshToday();
       $("#wbox").innerHTML = `<div class="empty"><div class="big">✅</div>Paid <b>${money(w.amount)}</b> to ${esc(w.full_name)}</div>`;
     });
   };
