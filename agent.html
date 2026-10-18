@@ -467,6 +467,161 @@ td .btn + .btn { margin-left: 6px; }
   background: linear-gradient(var(--card-2), var(--card-2)) padding-box, var(--grad) border-box; border: 3px solid transparent;
   box-shadow: 0 0 30px rgba(20, 217, 164, .25); }
 
+/* ---------- customer: balance pill (top right) + wallet buttons + ID ---------- */
+.bal-pill { display: inline-flex; align-items: center; gap: 8px; padding: 5px 5px 5px 12px; border-radius: 999px; text-decoration: none;
+  background: var(--card); border: 1px solid var(--line); color: var(--gold); font-weight: 800; font-size: .85rem; white-space: nowrap;
+  transition: border-color .15s, transform .1s; }
+.bal-pill:hover { border-color: var(--gold); } .bal-pill:active { transform: scale(.97); }
+.bal-pill i { font-style: normal; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-size: 1.15rem;
+  background: linear-gradient(135deg, #2ee59d, #16b46f); color: #04220f; font-weight: 900; box-shadow: 0 4px 12px rgba(34, 201, 131, .35); }
+.wallet-btns { display: grid; gap: 10px; }
+.wbtn { display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 14px; text-decoration: none; color: var(--text);
+  border: 1px solid; transition: transform .1s, filter .15s; }
+.wbtn:active { transform: scale(.99); } .wbtn:hover { filter: brightness(1.1); }
+.wbtn .wi { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; flex: 0 0 auto; }
+.wbtn .wi svg { width: 22px; height: 22px; }
+.wbtn b { display: block; font-size: 1.02rem; } .wbtn small { color: var(--muted); }
+.wbtn em { margin-left: auto; font-style: normal; font-size: 1.6rem; opacity: .6; }
+.wbtn.dep { background: rgba(34, 201, 131, .08); border-color: rgba(34, 201, 131, .3); }
+.wbtn.dep .wi { background: var(--green); color: #03200f; }
+.wbtn.wd { background: rgba(255, 93, 108, .08); border-color: rgba(255, 93, 108, .3); }
+.wbtn.wd .wi { background: var(--red); color: #fff; }
+.id-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border-radius: 12px; background: var(--card-2); }
+.id-big { font-size: 1.25rem; font-weight: 800; letter-spacing: .06em; }
+@media (max-width: 360px) { .topbar .small.muted#hello { display: none; } .bal-pill { font-size: .78rem; } }
+
+/* ---------- cart ---------- */
+.nav-item { position: relative; }
+.nav-badge { position: absolute; top: 6px; left: calc(50% + 6px); min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px;
+  background: var(--gold); color: #241600; font-style: normal; font-size: 11px; font-weight: 800; display: grid; place-items: center; }
+.product { -webkit-touch-callout: none; user-select: none; -webkit-user-select: none; touch-action: manipulation; transition: transform .15s, border-color .15s; }
+.product.pressing { transform: scale(.95); border-color: var(--gold); }
+.press-hint { margin: -6px 0 10px; }
+.buy-row { display: grid; grid-template-columns: 1fr 1.3fr; gap: 10px; }
+.qty-row { display: grid; grid-template-columns: 48px 1fr 48px; gap: 8px; }
+.qty-row input { text-align: center; font-weight: 800; font-size: 1.1rem; }
+.qbtn { border-radius: 12px; border: 1px solid var(--line); background: var(--card-2); color: var(--text); font-size: 1.4rem; font-weight: 700; cursor: pointer; }
+.cart-list { padding: 4px 14px; }
+.cart-item { display: flex; gap: 12px; align-items: flex-start; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.cart-item:last-child { border-bottom: 0; }
+.cart-item.bad { opacity: .8; }
+.cart-ph { width: 56px; height: 56px; border-radius: 12px; overflow: hidden; background: var(--card-2); display: grid; place-items: center; flex: 0 0 auto; }
+.cart-ph img { width: 100%; height: 100%; object-fit: cover; }
+.cart-sub { font-weight: 800; color: var(--gold); white-space: nowrap; }
+.add-more { display: block; text-align: center; padding: 12px; margin: 10px 0; border: 1px dashed var(--line); border-radius: 14px; font-weight: 700; }
+.cart-sum .row { padding: 6px 0; }
+.cart-sum .total-row { border-top: 1px solid var(--line); margin-top: 6px; padding-top: 12px; font-size: 1.15rem; }
+.cart-sum .total-row b { color: var(--gold); font-size: 1.3rem; }
+.cart-item .btn { white-space: nowrap; } .cart-item .grow { min-width: 0; }
+
+/* ---------- payment methods ---------- */
+.pm-card { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.pm-card:last-child { border-bottom: 0; } .pm-card.off { opacity: .55; }
+.pm-logo { width: 52px; height: 52px; border-radius: 12px; background: #fff; display: grid; place-items: center; overflow: hidden; flex: 0 0 auto;
+  border: 1px solid var(--line); color: #0c1530; font-weight: 800; font-size: .8rem; }
+.pm-logo img { width: 100%; height: 100%; object-fit: contain; }
+.pm-logo.big { width: 72px; height: 72px; }
+.pm-details { white-space: pre-wrap; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.pm-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+
+/* ---------- customer: payment method logos (3 per row) ---------- */
+.pm-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.pm-tile { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 6px; border-radius: 14px; cursor: pointer;
+  background: var(--card); border: 2px solid var(--line); color: var(--text); font: inherit; transition: border-color .15s, transform .1s; }
+.pm-tile:active { transform: scale(.97); }
+.pm-tile.on { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(31, 162, 255, .15); }
+.pm-tile .pm-logo { width: 54px; height: 54px; }
+.pm-name { font-size: .82rem; font-weight: 700; text-align: center; line-height: 1.2; word-break: break-word; }
+.pm-panel .pm-logo { width: 46px; height: 46px; }
+.pm-info { white-space: pre-wrap; padding: 12px; border-radius: 12px; background: var(--card-2); font-weight: 600; border-left: 3px solid var(--blue); }
+/* nicer file pickers (screenshots, KYC photo, logos) */
+input[type="file"] { padding: 8px; cursor: pointer; }
+input[type="file"]::file-selector-button { border: 0; padding: 10px 14px; margin-right: 12px; border-radius: 10px; cursor: pointer;
+  background: var(--grad); color: #fff; font: inherit; font-weight: 700; }
+
+/* ============ V21: moving message + pinned products ============ */
+.ticker { display: flex; align-items: center; gap: 8px; margin: 4px 0 10px; padding: 8px 10px; border-radius: 12px;
+  background: rgba(255, 200, 61, .10); border: 1px solid rgba(255, 200, 61, .35); overflow: hidden; }
+.ticker .tk-ic { flex: none; font-size: 1rem; }
+.tk-track { flex: 1; overflow: hidden; white-space: nowrap; position: relative; }
+.tk-move { display: inline-block; white-space: nowrap; font-weight: 700; font-size: .9rem; color: var(--text);
+  animation: tk-ltr 15s linear infinite; will-change: transform; }
+.tk-move.rtl { animation-name: tk-rtl; }
+.ticker:hover .tk-move, .ticker:active .tk-move { animation-play-state: paused; }
+@keyframes tk-ltr { from { transform: translateX(-100%); } to { transform: translateX(var(--tw, 100vw)); } }
+@keyframes tk-rtl { from { transform: translateX(var(--tw, 100vw)); } to { transform: translateX(-100%); } }
+@media (prefers-reduced-motion: reduce) {
+  .tk-move { animation: none; white-space: normal; }
+  .tk-track { white-space: normal; }
+}
+.sec-title { margin: 14px 0 8px; font-size: 1rem; }
+.product .ph { position: relative; }
+.product.pinned { border-color: rgba(255, 200, 61, .55); }
+.pin-badge { position: absolute; top: 8px; left: 8px; max-width: calc(100% - 16px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  background: var(--gold); color: #241600; font-size: .7rem; font-weight: 800; padding: 3px 8px; border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .25); }
+.pin-col { white-space: nowrap; }
+.product { display: flex; flex-direction: column; justify-content: flex-start; }
+.product .ph, .product .info { width: 100%; }
+
+/* ============ V22: Marketing manager panel ============ */
+.mk-ui { --grad: linear-gradient(135deg, #ff5fa2 0%, #8b5cff 100%); --blue: #b07cff; }
+.mk-tag { background: var(--grad); color: #fff; font-size: .7rem; font-weight: 800; letter-spacing: .08em; padding: 4px 10px; border-radius: 999px; }
+.badge.marketing { background: rgba(176, 124, 255, .16); color: #c9a6ff; }
+.stat .up { color: var(--green); font-weight: 800; } .stat .down { color: var(--red); font-weight: 800; }
+.stat .small { margin-top: 4px; }
+.mk-bars { gap: 3px; }
+.mk-bars .col { max-width: 30px; }
+.mk-two { align-items: start; }
+.mk-two > .card { margin: 0; }
+.hbar { padding: 8px 0; border-bottom: 1px solid var(--line); }
+.hbar:last-child { border-bottom: 0; }
+.hbar .track { height: 8px; border-radius: 99px; background: var(--card-2); margin: 6px 0 4px; overflow: hidden; }
+.hbar .track i { display: block; height: 100%; border-radius: 99px; background: var(--grad); }
+.mk-products { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; margin-top: 12px; }
+.mk-prod { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.mk-prod.pinned { border-color: rgba(255, 200, 61, .55); }
+.mk-prod .ph { aspect-ratio: 4 / 3; background: var(--card-2); display: grid; place-items: center; position: relative; overflow: hidden; }
+.mk-prod .ph img { width: 100%; height: 100%; object-fit: cover; }
+.mk-prod .info { padding: 10px 12px 12px; }
+.mk-prod .name { font-weight: 700; font-size: .92rem; }
+.mk-prod .price { color: var(--gold); font-weight: 800; margin-top: 2px; }
+.push-prev { display: flex; gap: 10px; align-items: flex-start; padding: 12px; border-radius: 14px; background: var(--card-2); border: 1px solid var(--line); }
+.push-prev img { width: 36px; height: 36px; border-radius: 9px; }
+.push-prev .pt { font-weight: 700; margin-top: 2px; word-break: break-word; }
+.push-prev .pb { color: var(--muted); word-break: break-word; white-space: pre-wrap; }
+@media (max-width: 860px) { .mk-two { grid-template-columns: 1fr; } }
+.side-link svg { width: 20px; height: 20px; flex: none; }
+.mk-ui .stats { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+@media (max-width: 480px) { .mk-ui .stat .v { font-size: 1.2rem; } .mk-ui .stat { padding: 12px; } .mk-bars .val { display: none; } }
+
+/* ============ V23: Agent Deposit Portal ============ */
+.dp-app { padding-bottom: 40px; }
+.dp-id { border: 1px solid var(--line); border-radius: 14px; padding: 16px; margin: 4px 0 18px;
+  background: linear-gradient(135deg, rgba(25, 227, 173, .14), rgba(14, 165, 164, .05)), var(--card); }
+.dp-id .k { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.dp-id .v { font-size: 1.7rem; font-weight: 800; color: var(--blue); margin-top: 2px; }
+.dp-id .dp-bal { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); }
+.dp-id .dp-bal b { font-family: var(--mono); }
+.dp-h { margin: 0 0 10px; font-size: 1rem; }
+.dp-app .pm-grid { margin-bottom: 22px; }
+.dp-done { text-align: center; padding: 28px 18px; }
+.dp-done h2 { margin: 14px 0 6px; }
+.dp-check { width: 76px; height: 76px; margin: 0 auto; border-radius: 50%; display: grid; place-items: center; font-size: 2.4rem; font-weight: 800;
+  color: #04140f; background: var(--grad); box-shadow: 0 0 0 10px rgba(20, 217, 164, .12); animation: dp-pop .45s ease-out; }
+@keyframes dp-pop { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .dp-check { animation: none; } }
+/* agent desk: button to the deposit portal */
+.tile-wide { display: flex; align-items: center; gap: 12px; padding: 14px 16px; margin: -6px 0 18px; border-radius: 14px; text-decoration: none;
+  background: rgba(20, 217, 164, .08); border: 1px dashed rgba(20, 217, 164, .45); color: var(--text); }
+.tile-wide .ti { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: var(--grad); color: #04140f; flex: none; }
+.tile-wide .ti svg { width: 22px; height: 22px; }
+.tile-wide span { font-size: .78rem; color: var(--muted); }
+.tile-wide em { font-style: normal; font-size: 1.3rem; color: var(--blue); }
+.tile-wide:active { transform: scale(.98); }
+.dp-back { display: inline-block; margin: 0 0 10px; color: var(--muted); font-size: .85rem; text-decoration: none; }
+.dp-back:hover { color: var(--blue); }
+
 </style>
 <title>Premvio Agent</title>
 <meta name="robots" content="noindex">
@@ -497,7 +652,9 @@ else if(!PV_CONFIG.SUPABASE_ANON_KEY||/PASTE/.test(PV_CONFIG.SUPABASE_ANON_KEY))
 if (window.pvDead) throw new Error("stopped");
 const CFG = window.PV_CONFIG;
 // Each panel keeps its own login, so logging out of one never logs out the others.
-const PV_PANEL = /admin\.html/i.test(location.pathname) ? "admin" : /agent\.html/i.test(location.pathname) ? "agent" : "customer";
+// agent.html and agent-deposit.html share the agent login (log in once, use both).
+const PV_PANEL = /admin\.html/i.test(location.pathname) ? "admin" : /agent(-deposit)?\.html/i.test(location.pathname) ? "agent"
+  : /marketing\.html/i.test(location.pathname) ? "marketing" : "customer";
 const sb = window.supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY, {
   auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storageKey: "premvio-" + PV_PANEL + "-login" },
 });
@@ -877,6 +1034,8 @@ function start(p) {
         <button class="tile deposit" data-go="deposit"><div class="ti">${ICONS.cash}</div><div><b>Deposit</b><br><span>Top up a customer</span></div></button>
         <button class="tile withdraw" data-go="withdraw"><div class="ti">${ICONS.wallet}</div><div><b>Withdrawal</b><br><span>Pay out a code</span></div></button>
       </div>
+      ${p.role === "agent" ? `<a class="tile-wide" href="agent-deposit.html"><div class="ti">${ICONS.plus}</div>
+        <div class="grow"><b>Deposit to my balance</b><br><span>Pay Premvio & add money to your agent ID</span></div><em>→</em></a>` : ""}
       <div class="recent-head"><b>Last 7 days</b><button class="all-btn" data-go="history">All history <span>→</span></button></div>
       <div id="recent" class="card recent"><div class="loader"></div></div>
     </div>
