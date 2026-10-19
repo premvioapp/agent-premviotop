@@ -621,6 +621,124 @@ input[type="file"]::file-selector-button { border: 0; padding: 10px 14px; margin
 .tile-wide:active { transform: scale(.98); }
 .dp-back { display: inline-block; margin: 0 0 10px; color: var(--muted); font-size: .85rem; text-decoration: none; }
 .dp-back:hover { color: var(--blue); }
+/* admin: choose agents for an agent payment method */
+.seg { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.seg label { display: flex; align-items: center; gap: 8px; margin: 0; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; color: var(--text); cursor: pointer; }
+.seg input { width: auto; margin: 0; }
+.ag-list { max-height: 240px; overflow-y: auto; border: 1px solid var(--line); border-radius: 10px; margin-top: 8px; }
+.ag-row { display: flex; align-items: center; gap: 10px; margin: 0; padding: 9px 12px; border-bottom: 1px solid var(--line); color: var(--text); cursor: pointer; }
+.ag-row:last-child { border-bottom: 0; }
+.ag-row input { width: auto; margin: 0; }
+.ag-row:hover { background: var(--card-2); }
+
+/* ============ V26: promo codes + gift a friend ============ */
+.promo-box { display: flex; gap: 8px; }
+.promo-box input { flex: 1; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
+.promo-box input[readonly] { border-color: var(--green); color: var(--green); }
+.promo-box .btn { flex: none; }
+.promo-msg { min-height: 1.2em; margin-top: 6px; }
+.gift-box { margin-top: 14px; border: 1px dashed rgba(255, 200, 61, .45); border-radius: 12px; padding: 10px 12px; background: rgba(255, 200, 61, .05); }
+.gift-toggle { display: flex; align-items: center; gap: 10px; margin: 0; color: var(--text); font-weight: 700; cursor: pointer; }
+.gift-toggle input { width: 20px; height: 20px; margin: 0; accent-color: var(--gold); }
+.gift-tag { color: var(--gold); font-weight: 600; }
+
+/* ============ V27: flash sale, stock, points, invites ============ */
+.product .prices { margin-top: 4px; line-height: 1.3; }
+.product .prices .price { color: var(--gold); font-weight: 800; }
+.old-price { color: var(--muted); font-size: .8rem; }
+.sale-pct { background: var(--red); color: #fff; font-size: .68rem; font-weight: 800; padding: 1px 6px; border-radius: 6px; vertical-align: middle; }
+.sale-cd { font-size: .72rem; font-weight: 800; color: var(--red); margin-top: 3px; font-variant-numeric: tabular-nums; }
+.sale-cd.big { font-size: .95rem; margin-top: 6px; }
+.big-price .price { color: var(--gold); font-weight: 800; font-size: 1.3rem; }
+.sale-badge { position: absolute; top: 8px; right: 8px; background: var(--red); color: #fff; font-size: .68rem; font-weight: 800; padding: 3px 8px; border-radius: 999px; }
+.product.onsale { border-color: rgba(255, 93, 108, .5); }
+.stock-tag { display: inline-block; margin-top: 4px; font-size: .7rem; font-weight: 800; color: var(--orange); }
+.stock-tag.out { color: var(--red); }
+.product.soldout .ph { filter: grayscale(1); opacity: .55; }
+.pts-toggle { display: flex; align-items: flex-start; gap: 10px; margin: 12px 0 0; padding: 10px 12px; border-radius: 12px; background: rgba(255, 200, 61, .07); border: 1px solid rgba(255, 200, 61, .3); color: var(--text); cursor: pointer; }
+.pts-toggle input { width: 20px; height: 20px; margin: 0; accent-color: var(--gold); flex: none; }
+.pts-toggle small { display: block; font-weight: 500; }
+.ref-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; }
+.ref-stats div { background: var(--card-2); border-radius: 12px; padding: 10px 4px; }
+.ref-stats b { display: block; font-size: 1.05rem; }
+.ref-stats span { font-size: .72rem; color: var(--muted); }
+.pts-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 14px; border-top: 1px solid var(--line); }
+.rewards-card .pts-row:first-child { border-top: 0; padding-top: 0; }
+
+/* ============ V28: reviews, PIN lock, vouchers ============ */
+.stars { color: var(--gold); letter-spacing: 1px; }
+.rating-line { font-size: .75rem; font-weight: 700; margin-top: 3px; }
+.review { padding: 10px 0; border-bottom: 1px solid var(--line); }
+.review:last-child { border-bottom: 0; }
+.star-pick { display: flex; justify-content: center; gap: 6px; margin-top: 8px; }
+.star-pick button { font-size: 2.3rem; line-height: 1; background: none; border: 0; color: var(--line); cursor: pointer; padding: 2px; transition: transform .1s, color .1s; }
+.star-pick button.on { color: var(--gold); }
+.star-pick button:active { transform: scale(1.2); }
+.pin-screen { position: fixed; inset: 0; z-index: 300; background: var(--bg); display: grid; place-items: center; padding: 20px; }
+.pin-overlay { position: fixed; inset: 0; z-index: 400; background: rgba(0, 0, 0, .6); display: grid; place-items: center; padding: 16px; backdrop-filter: blur(4px); }
+.pin-card { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 22px 18px; width: 100%; max-width: 340px; }
+.pin-card .close { position: absolute; top: 10px; right: 10px; }
+.pin-pad { text-align: center; width: 100%; max-width: 300px; margin: 0 auto; }
+.pin-pad h2 { margin: 6px 0 2px; }
+.pin-logo { width: 72px; height: 72px; margin-bottom: 6px; }
+.pin-dots { display: flex; justify-content: center; gap: 16px; margin: 18px 0 6px; }
+.pin-dots i { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--muted); transition: background .1s, border-color .1s; }
+.pin-dots i.on { background: var(--gold); border-color: var(--gold); }
+.pin-dots.shake { animation: pin-shake .35s; }
+@keyframes pin-shake { 25% { transform: translateX(-8px); } 50% { transform: translateX(8px); } 75% { transform: translateX(-4px); } }
+.pin-msg { color: var(--red); min-height: 1.3em; margin: 4px 0 10px; }
+.pin-keys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.pin-keys button { height: 58px; border-radius: 16px; border: 1px solid var(--line); background: var(--card-2); color: var(--text); font: inherit; font-size: 1.4rem; font-weight: 700; cursor: pointer; }
+.pin-keys button:active { background: var(--line); transform: scale(.96); }
+.pin-pad.busy, .busy .pin-keys { opacity: .6; pointer-events: none; }
+.pin-input { text-align: center; letter-spacing: .6em; font-size: 1.3rem; font-weight: 800; }
+.v-amounts { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
+.v-amt { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 12px 6px; border-radius: 14px; cursor: pointer; font: inherit; color: var(--text);
+  background: linear-gradient(135deg, rgba(255, 200, 61, .15), rgba(255, 159, 67, .08)); border: 1px dashed rgba(255, 200, 61, .5); }
+.v-amt b { color: var(--gold); } .v-amt span { font-size: .7rem; color: var(--muted); }
+.v-amt:active { transform: scale(.97); }
+@media (prefers-reduced-motion: reduce) { .pin-dots.shake { animation: none; } }
+.empty h2 { color: var(--text); }
+
+/* ============ V29: help chat ============ */
+.help-link { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
+.help-link .hl-ic { font-size: 1.6rem; } .help-link em { font-style: normal; font-size: 1.4rem; color: var(--muted); }
+.help-row { text-decoration: none; color: var(--text); } .help-row em { font-style: normal; color: var(--muted); }
+.chat { display: flex; flex-direction: column; gap: 8px; padding: 6px 0 12px; }
+.bubble { max-width: 82%; padding: 9px 12px; border-radius: 16px; white-space: pre-wrap; word-break: break-word; line-height: 1.4; }
+.bubble.me { align-self: flex-end; background: var(--grad); color: #fff; border-bottom-right-radius: 4px; }
+.bubble.them { align-self: flex-start; background: var(--card); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+.bubble .who { font-size: .72rem; font-weight: 800; color: var(--gold); margin-bottom: 2px; }
+.bubble .t { font-size: .68rem; opacity: .7; margin-top: 3px; text-align: right; }
+.chat-input { position: sticky; bottom: calc(var(--nav-h) + 8px); display: flex; gap: 8px; align-items: flex-end; padding: 8px; border-radius: 16px;
+  background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); }
+.chat-input textarea { flex: 1; min-height: 42px; max-height: 140px; resize: none; margin: 0; }
+.chat-input .btn { flex: none; width: 46px; height: 42px; padding: 0; }
+/* language switch */
+.lang-seg { display: flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; flex: none; }
+.lang-seg button { border: 0; background: none; color: var(--muted); font: inherit; font-weight: 700; padding: 7px 12px; cursor: pointer; }
+.lang-seg button.on { background: var(--grad); color: #fff; }
+.auth-wrap { position: relative; }
+.auth-lang { position: absolute; top: 12px; right: 12px; border: 1px solid var(--line); background: var(--card); color: var(--text); font: inherit; font-weight: 700;
+  padding: 6px 12px; border-radius: 999px; cursor: pointer; }
+/* agent commission */
+.comm-card { margin: -6px 0 16px; padding: 14px 16px; border-radius: 14px; background: rgba(255, 200, 61, .07); border: 1px solid rgba(255, 200, 61, .3); }
+.comm-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0 6px; }
+.comm-row span { display: block; font-size: .72rem; color: var(--muted); }
+.comm-row b { color: var(--gold); }
+/* admin: help chat + reports */
+.admin-chat { max-height: 55vh; overflow-y: auto; padding: 10px 2px; }
+.report-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; margin-top: 12px; }
+.report-btn { display: flex; align-items: center; gap: 12px; text-align: left; padding: 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--card); color: var(--text); font: inherit; cursor: pointer; }
+.report-btn:hover { border-color: var(--blue); }
+.report-btn .ri { font-size: 1.6rem; }
+.report-btn .dl { flex: none; font-weight: 800; color: var(--green); font-size: .85rem; }
+.report-btn:disabled { opacity: .6; cursor: wait; }
+.comm-card { margin: 0 0 14px; }
+.comm-rates { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 6px 0 8px; }
+.comm-rates div { background: var(--card-2); border-radius: 12px; padding: 10px 12px; }
+.comm-rates span { display: block; font-size: .72rem; color: var(--muted); }
+.comm-rates b { font-size: 1.4rem; color: var(--gold); }
 
 </style>
 <title>Premvio Agent</title>
@@ -1072,6 +1190,22 @@ function back() { if (history.length > 1 && location.hash) history.back(); else 
 function amountOnly(n) { return Number(n || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
 
 // Today's totals in the register strip
+// 💰 commission (Profile page). The % is set for each agent by the admin.
+async function drawCommission(box) {
+  if (!box || A.me.role !== "agent") return;
+  const [{ data: c }, { data: list }] = await Promise.all([sb.rpc("agent_commission_summary"),
+    sb.from("transactions").select("created_at, amount, description").eq("user_id", A.me.id).eq("type", "commission").order("created_at", { ascending: false }).limit(15)]);
+  if (!c || !document.body.contains(box)) return;
+  const pl = Number(c.load_pct), pp = Number(c.payout_pct);
+  box.innerHTML = `<div class="card comm-card"><h3 style="margin:0 0 6px">💰 My commission</h3>
+    <div class="comm-rates"><div><span>On customer top-ups</span><b class="num">${pl}%</b></div><div><span>On withdrawals paid</span><b class="num">${pp}%</b></div></div>
+    ${pl > 0 || pp > 0 ? `<div class="small muted">Example: a top-up of ${money(1000)} earns you ${money(10 * pl)}.</div>` : `<div class="small muted">No commission is set for you yet. The admin decides your commission.</div>`}
+    <div class="comm-row"><div><span>Today</span><b class="num">${money(c.today)}</b></div><div><span>This month</span><b class="num">${money(c.month)}</b></div>
+      <div><span>All time</span><b class="num">${money(c.total)}</b></div></div>
+    <div class="small muted">Commission is added to your agent balance automatically.</div>
+    ${(list || []).length ? `<div class="recent mt">${list.map((t) => `<div class="list-item"><div class="ic tx-in">+</div><div class="grow"><div class="small">${esc(t.description)}</div>
+      <div class="small muted">${fmtDate(t.created_at)}</div></div><b class="num" style="color:var(--gold)">${money(t.amount)}</b></div>`).join("")}</div>` : ""}</div>`;
+}
 async function refreshToday() {
   const [from, to] = rangeISO(defaultRange(1));
   const { data } = await sb.rpc("agent_recent", { p_from: from, p_to: to });
@@ -1255,6 +1389,7 @@ async function viewProfile(v) {
       <div><div class="k">Street</div><div class="v">${esc(p.street || "—")}</div></div>
     </div>
   </div>
+  <div id="commBox"></div>
   <div class="card">
     <h3 style="margin-top:0">🔒 Change password</h3>
     <form id="pwf" autocomplete="off">
@@ -1264,6 +1399,7 @@ async function viewProfile(v) {
       <button class="btn block mt">Change password</button>
     </form>
   </div>`;
+  drawCommission($("#commBox"));
   $("#pwf").onsubmit = (e) => {
     e.preventDefault();
     const f = e.target;
