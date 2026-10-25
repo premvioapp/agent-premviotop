@@ -1279,7 +1279,7 @@ function start(p) {
         <button class="tile withdraw" data-go="withdraw"><div class="ti">${ICONS.wallet}</div><div><b>Withdrawal</b><br><span>Pay out a code</span></div></button>
       </div>
       ${p.role === "agent" ? `<button class="tile-wide ao-tile" data-go="orders"><div class="ti">📦</div>
-        <div class="grow"><b>Orders to deliver</b><br><span>Orders the admin gave you</span></div><span class="ao-count hidden" id="aoCount"></span><em>→</em></button>` : ""}
+        <div class="grow"><b>Orders to deliver</b><br><span>Orders given to you</span></div><span class="ao-count hidden" id="aoCount"></span><em>→</em></button>` : ""}
       ${p.role === "agent" ? `<a class="tile-wide" href="agent-deposit.html"><div class="ti">${ICONS.plus}</div>
         <div class="grow"><b>Deposit to my balance</b><br><span>Pay Premvio & add money to your agent ID</span></div><em>→</em></a>` : ""}
       <div class="recent-head"><b>Last 7 days</b><button class="all-btn" data-go="history">All history <span>→</span></button></div>
@@ -1390,7 +1390,7 @@ async function countOrders() {
   const n = (data || []).length;
   el.textContent = n; el.classList.toggle("hidden", !n);
 }
-const AO_PAY = { waiting: ["pending", "Waiting for admin"], approved: ["completed", "Paid ✅"], rejected: ["rejected", "Not paid"] };
+const AO_PAY = { waiting: ["pending", "Waiting for approval"], approved: ["completed", "Paid ✅"], rejected: ["rejected", "Not paid"] };
 async function viewOrders(v) {
   if (A.me.role !== "agent") { v.innerHTML = `<div class="card"><p class="muted">Only agent accounts get orders to deliver.</p></div>`; return; }
   const done = A.aoTab === "done";
@@ -1403,7 +1403,7 @@ async function viewOrders(v) {
   if (error) { box.innerHTML = `<div class="empty">${esc(errMsg(error))}</div>`; return; }
   if (!data.length) { box.innerHTML = `<div class="empty"><div class="big">${done ? "🗂️" : "🎉"}</div>${done ? "No delivered orders yet" : "Nothing to deliver right now"}</div>`; return; }
   const waitSum = data.filter((o) => o.agent_pay_status === "waiting").reduce((a, o) => a + Number(o.agent_pay || 0), 0);
-  box.innerHTML = (done && waitSum ? `<div class="card small">Waiting for admin approval: <b style="color:var(--gold)">${money(waitSum)}</b></div>` : "") +
+  box.innerHTML = (done && waitSum ? `<div class="card small">Waiting for approval: <b style="color:var(--gold)">${money(waitSum)}</b></div>` : "") +
     data.map((o) => `<div class="card ao-card">
       <div class="row between"><b>#${o.id} · ${esc(o.product_name)} × ${o.quantity}</b><span class="small muted">${fmtDate(o.created_at)}</span></div>
       <div class="small muted">Customer: ${esc(o.customer)} · <span class="mono">${esc(o.member_id)}</span></div>
@@ -1411,18 +1411,18 @@ async function viewOrders(v) {
       <div class="ao-form">${(o.form_data || []).filter((x) => x.value).map((x) => `<div class="kv"><span>${esc(x.label)}:</span> <b>${esc(x.value)}</b>
         <button class="link-btn small" onclick="copyText(this.dataset.v)" data-v="${esc(x.value)}">copy</button></div>`).join("") || `<span class="muted small">No details</span>`}</div>
       <div class="row between mt"><span>You get <b style="color:var(--gold)">${money(o.agent_pay || 0)}</b></span>
-        ${done ? `<span>${o.status !== "completed" ? `<span class="badge ${o.status}">${o.status}</span> ` : ""}${o.agent_pay_status ? `<span class="badge ${AO_PAY[o.agent_pay_status][0]}">${AO_PAY[o.agent_pay_status][1]}</span>` : o.status === "completed" ? `<span class="badge">done by admin</span>` : ""}</span>`
+        ${done ? `<span>${o.status !== "completed" ? `<span class="badge ${o.status}">${o.status}</span> ` : ""}${o.agent_pay_status ? `<span class="badge ${AO_PAY[o.agent_pay_status][0]}">${AO_PAY[o.agent_pay_status][1]}</span>` : o.status === "completed" ? `<span class="badge">completed</span>` : ""}</span>`
           : o.refund_requested ? `<span class="badge requested">refund asked — wait</span>` : `<button class="btn sm success" data-done="${o.id}">✅ Mark done</button>`}</div>
       ${o.agent_pay_note ? `<div class="small muted mt">${esc(o.agent_pay_note)}</div>` : ""}
     </div>`).join("");
   $$("[data-done]", box).forEach((b) => (b.onclick = async () => {
     const o = data.find((x) => x.id == b.dataset.done);
     if (!(await confirmBox(`Delivered order #${o.id}?`, `Only press this after you delivered <b>${esc(o.product_name)} × ${o.quantity}</b>.
-      The customer sees it as completed. Your <b>${money(o.agent_pay || 0)}</b> is added after the admin approves.`, "Yes, delivered"))) return;
+      The customer sees it as completed. Your <b>${money(o.agent_pay || 0)}</b> is added after it is approved.`, "Yes, delivered"))) return;
     busy(b, async () => {
       const { error: e } = await sb.rpc("agent_mark_done", { p_order: o.id, p_note: null });
       if (e) throw e;
-      toast("Marked done. Waiting for admin approval.", "success");
+      toast("Marked done. Waiting for approval.", "success");
       viewOrders(v);
     });
   }));
@@ -1464,7 +1464,7 @@ function showCustomer(c) {
     e.preventDefault();
     const amt = Number(lf.amount.value);
     if (!(amt > 0)) return toast("Enter a valid amount.", "error");
-    if (A.me.role === "agent" && amt > Number(A.me.balance)) return toast("Not enough agent balance. Ask admin to deposit to your account.", "error");
+    if (A.me.role === "agent" && amt > Number(A.me.balance)) return toast("Not enough agent balance. Please deposit to your agent balance first.", "error");
     if (!(await confirmBox("Confirm deposit", `Deposit <b>${money(amt)}</b> to <b>${esc(c.full_name)}</b> (${esc(c.member_id)})?<br>Only confirm after you've received the cash.`, "Deposit now"))) return;
     busy($("button", lf), async () => {
       const { error } = await sb.rpc("agent_load_customer", { p_member_id: c.member_id, p_amount: amt });
