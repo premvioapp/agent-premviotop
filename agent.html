@@ -849,6 +849,105 @@ button.tile-wide { width: 100%; font: inherit; color: var(--text); text-align: l
 .ao-card .ao-form .kv { padding: 3px 0; }
 .agent-tag { margin-top: 4px; color: var(--gold); }
 
+/* ===================== V41: new Home page ===================== */
+.push-card { margin-bottom: 12px; }
+.hello-card { position: relative; overflow: hidden; border-radius: 22px; padding: 18px 16px 14px; margin: 2px 0 14px; color: #fff;
+  background: radial-gradient(120% 140% at 100% 0%, #3d7bff 0%, rgba(61,123,255,0) 55%), linear-gradient(135deg, #1186f0 0%, #2a52e8 55%, #3b2fc9 100%);
+  box-shadow: 0 14px 34px rgba(37, 84, 230, .35); }
+.hello-card::after { content: ""; position: absolute; right: -40px; bottom: -60px; width: 190px; height: 190px; border-radius: 50%;
+  background: rgba(255,255,255,.07); pointer-events: none; }
+.hc-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.hc-greet { font-size: .9rem; opacity: .92; font-weight: 600; }
+.hc-lbl { margin-top: 10px; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; opacity: .75; }
+.hc-bal { font-size: 1.75rem; font-weight: 800; letter-spacing: -.01em; font-variant-numeric: tabular-nums; line-height: 1.15; }
+.hc-add { flex: none; display: inline-flex; align-items: center; gap: 4px; padding: 8px 12px; border-radius: 999px; text-decoration: none;
+  background: rgba(255,255,255,.18); color: #fff; font-weight: 700; font-size: .82rem; border: 1px solid rgba(255,255,255,.25); backdrop-filter: blur(6px); }
+.hc-add:active { transform: scale(.96); }
+.quick-row { position: relative; z-index: 1; display: flex; justify-content: space-between; gap: 6px; margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.16); }
+.q-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; text-decoration: none; color: #fff; min-width: 0; }
+.q-ic { width: 46px; height: 46px; border-radius: 15px; display: grid; place-items: center; font-size: 1.3rem; background: rgba(255,255,255,.16);
+  border: 1px solid rgba(255,255,255,.2); transition: transform .15s; }
+.q-btn:active .q-ic { transform: scale(.9); }
+.q-lb { font-size: .72rem; font-weight: 600; opacity: .95; white-space: nowrap; }
+
+.banners { position: relative; margin: 0 0 14px; }
+.bn-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; border-radius: 18px; scrollbar-width: none; }
+.bn-track::-webkit-scrollbar { display: none; }
+.bn { position: relative; flex: 0 0 100%; scroll-snap-align: start; aspect-ratio: 2 / 1; border: 0; padding: 0; cursor: pointer; background: var(--card-2); overflow: hidden; }
+.bn img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.bn-title { position: absolute; left: 0; right: 0; bottom: 0; padding: 26px 14px 12px; text-align: left; color: #fff; font-weight: 800; font-size: 1rem;
+  background: linear-gradient(transparent, rgba(0,0,0,.7)); }
+.bn-dots { position: absolute; bottom: 8px; right: 12px; display: flex; gap: 5px; }
+.bn-dots i { width: 6px; height: 6px; border-radius: 99px; background: rgba(255,255,255,.5); transition: width .2s; }
+.bn-dots i.on { width: 16px; background: #fff; }
+
+.last-order { display: flex; align-items: center; gap: 12px; padding: 12px 14px; margin: 0 0 14px; border-radius: 16px; text-decoration: none; color: var(--text);
+  background: var(--card); border: 1px solid rgba(255, 200, 61, .35); }
+.last-order .lo-ic { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: rgba(255, 200, 61, .14); font-size: 1.2rem; }
+.last-order b { display: block; font-size: .9rem; }
+.last-order small { display: flex; align-items: center; gap: 6px; color: var(--gold); font-weight: 600; font-size: .78rem; margin-top: 2px; }
+.lo-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); animation: loPulse 1.4s infinite; }
+@keyframes loPulse { 50% { opacity: .3; } }
+.last-order em { font-style: normal; font-size: 1.4rem; color: var(--muted); }
+
+.cat-chips { display: flex; gap: 8px; overflow-x: auto; margin: 2px -16px 8px; padding: 2px 16px 6px; scrollbar-width: none; }
+.cat-chips::-webkit-scrollbar { display: none; }
+.cat-chip { flex: none; padding: 8px 15px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--text);
+  font: inherit; font-size: .85rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.cat-chip.on { background: var(--grad); border-color: transparent; color: #fff; box-shadow: 0 6px 16px rgba(47, 107, 255, .35); }
+
+.sec-row-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.sec-row-head .sale-cd { font-size: .8rem; margin: 14px 0 8px; padding: 4px 10px; border-radius: 999px; background: rgba(255, 93, 108, .12); }
+.h-row { display: flex; gap: 10px; overflow-x: auto; margin: 0 -16px 6px; padding: 2px 16px 8px; scroll-snap-type: x proximity; scrollbar-width: none; }
+.h-row::-webkit-scrollbar { display: none; }
+.h-row .product { flex: 0 0 42%; max-width: 180px; scroll-snap-align: start; }
+
+/* product cards */
+.product { position: relative; border-radius: 18px; box-shadow: 0 4px 14px rgba(0,0,0,.12); }
+.product .ph { border-bottom: 1px solid var(--line); }
+.product .ph-ic { color: var(--gold); width: 44px; }
+.product .info { padding: 10px 12px 14px; padding-right: 44px; }
+.product.mini .info { padding: 8px 10px 12px; padding-right: 40px; }
+.product.mini .name { font-size: .84rem; }
+.add-btn { position: absolute; right: 10px; bottom: 12px; width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center;
+  background: var(--grad); color: #fff; font-weight: 800; font-size: 1.2rem; line-height: 1; box-shadow: 0 6px 14px rgba(47, 107, 255, .4); cursor: pointer; }
+.add-btn:active { transform: scale(.88); }
+.product.mini .add-btn { width: 26px; height: 26px; font-size: 1.05rem; right: 8px; bottom: 10px; }
+:root[data-theme="light"] .product { box-shadow: 0 4px 14px rgba(20, 40, 100, .08); }
+.hc-top > div:first-child { flex: 1; min-width: 0; }
+.hc-bal { white-space: nowrap; font-size: clamp(1.35rem, 7vw, 1.75rem); }
+.hc-add { padding: 7px 11px; font-size: .78rem; }
+.h-row { scroll-padding-inline: 16px; }
+.product.mini .prices { font-size: .8rem; }
+.product.mini .prices .price { white-space: nowrap; }
+.banner-admin { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.ba-item { padding: 10px; margin: 0; }
+.ba-item img { width: 100%; aspect-ratio: 2 / 1; object-fit: cover; border-radius: 12px; display: block; background: var(--card-2); }
+.ba-info { padding: 8px 4px 2px; }
+.banner-prev { width: 100%; aspect-ratio: 2 / 1; object-fit: cover; border-radius: 12px; margin-bottom: 8px; background: var(--card-2); }
+
+/* V41b: light quick buttons (no big blue card) */
+.quick-row { display: flex; justify-content: space-between; gap: 6px; margin: 4px 0 14px; padding: 12px 8px; border-radius: 18px;
+  background: var(--card); border: 1px solid var(--line); border-top: 1px solid var(--line); }
+.q-btn { color: var(--text); }
+.q-ic { width: 44px; height: 44px; border-radius: 14px; font-size: 1.25rem; border: 0; }
+.q-dep .q-ic { background: rgba(34, 201, 131, .14); }
+.q-wd .q-ic { background: rgba(255, 93, 108, .13); }
+.q-vo .q-ic { background: rgba(255, 159, 67, .14); }
+.q-in .q-ic { background: rgba(255, 200, 61, .14); }
+.q-he .q-ic { background: rgba(31, 162, 255, .14); }
+.q-lb { color: var(--muted); font-weight: 600; opacity: 1; }
+.quick-row { justify-content: space-around; }
+/* V42: agent delivery money summary */
+.ao-sum { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.ao-sum:empty { display: none; }
+.ao-sum > div { padding: 12px; border-radius: 14px; background: var(--card); border: 1px solid var(--line); }
+.ao-sum span { display: block; font-size: .75rem; color: var(--muted); }
+.ao-sum b { font-size: 1.05rem; }
+.ao-sum .tue { border-color: rgba(255, 200, 61, .45); }
+.ao-sum .tue b { color: var(--gold); }
+.badge.tue { background: rgba(255, 200, 61, .15); color: var(--gold); }
+
 </style>
 <title>Premvio Agent</title>
 <meta name="robots" content="noindex">
@@ -1386,21 +1485,27 @@ async function countOrders() {
   const n = (data || []).length;
   el.textContent = n; el.classList.toggle("hidden", !n);
 }
-const AO_PAY = { waiting: ["pending", "Waiting for approval"], approved: ["completed", "Paid ✅"], rejected: ["rejected", "Not paid"] };
+const AO_PAY = { waiting: ["pending", "Waiting for approval"], approved: ["tue", "Approved · Tuesday"], paid: ["completed", "Paid ✅"], rejected: ["rejected", "Not paid"] };
+function tuesdayText(d) { return d ? new Date(d + "T00:00").toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" }) : "Tuesday"; }
 async function viewOrders(v) {
   if (A.me.role !== "agent") { v.innerHTML = `<div class="card"><p class="muted">Only agent accounts get orders to deliver.</p></div>`; return; }
   const done = A.aoTab === "done";
-  v.innerHTML = `<div class="seg-tabs"><button class="${done ? "" : "on"}" data-t="todo">To deliver</button><button class="${done ? "on" : ""}" data-t="done">Done</button></div>
+  v.innerHTML = `<div class="ao-sum" id="aoSum"></div>
+    <div class="seg-tabs"><button class="${done ? "" : "on"}" data-t="todo">To deliver</button><button class="${done ? "on" : ""}" data-t="done">Done</button></div>
     <div id="aoList"><div class="loader"></div></div>`;
+  sb.rpc("agent_delivery_summary").then(({ data: sm }) => {
+    const el = $("#aoSum");
+    if (!el || !sm) return;
+    el.innerHTML = `<div><span>Waiting for approval</span><b>${money(sm.waiting)}</b></div>
+      <div class="tue"><span>Coming ${esc(tuesdayText(sm.next_payout))}</span><b>${money(sm.tuesday)}</b></div>`;
+  });
   $$("[data-t]", v).forEach((b) => (b.onclick = () => { A.aoTab = b.dataset.t; viewOrders(v); }));
   const { data, error } = await sb.rpc("agent_orders", { p_done: done });
   const box = $("#aoList");
   if (!box) return;
   if (error) { box.innerHTML = `<div class="empty">${esc(errMsg(error))}</div>`; return; }
   if (!data.length) { box.innerHTML = `<div class="empty"><div class="big">${done ? "🗂️" : "🎉"}</div>${done ? "No delivered orders yet" : "Nothing to deliver right now"}</div>`; return; }
-  const waitSum = data.filter((o) => o.agent_pay_status === "waiting").reduce((a, o) => a + Number(o.agent_pay || 0), 0);
-  box.innerHTML = (done && waitSum ? `<div class="card small">Waiting for approval: <b style="color:var(--gold)">${money(waitSum)}</b></div>` : "") +
-    data.map((o) => `<div class="card ao-card">
+  box.innerHTML = data.map((o) => `<div class="card ao-card">
       <div class="row between"><b>#${o.id} · ${esc(o.product_name)} × ${o.quantity}</b><span class="small muted">${fmtDate(o.created_at)}</span></div>
       <div class="small muted">Customer: ${esc(o.customer)} · <span class="mono">${esc(o.member_id)}</span></div>
       ${o.gift_to ? `<div class="small gift-tag">🎁 Gift — deliver to ${esc(o.gift_to)}</div>` : ""}
@@ -1414,7 +1519,7 @@ async function viewOrders(v) {
   $$("[data-done]", box).forEach((b) => (b.onclick = async () => {
     const o = data.find((x) => x.id == b.dataset.done);
     if (!(await confirmBox(`Delivered order #${o.id}?`, `Only press this after you delivered <b>${esc(o.product_name)} × ${o.quantity}</b>.
-      The customer sees it as completed. Your <b>${money(o.agent_pay || 0)}</b> is added after it is approved.`, "Yes, delivered"))) return;
+      The customer sees it as completed. Your <b>${money(o.agent_pay || 0)}</b> is added to your balance on Tuesday after it is approved.`, "Yes, delivered"))) return;
     busy(b, async () => {
       const { error: e } = await sb.rpc("agent_mark_done", { p_order: o.id, p_note: null });
       if (e) throw e;
