@@ -1265,23 +1265,19 @@ function start(p) {
     </header>
     <div id="home">
       <div class="register">
-        <div class="top"><div class="row between"><div class="lbl">${p.role === "agent" ? "Cash float · agent balance" : "Admin using agent desk"}</div>
+        <div class="top"><div class="row between"><div class="lbl">${p.role === "agent" ? "Balance" : "Admin using agent desk"}</div>
           <button class="eye" id="eye" title="Hide / show balance">👁</button></div>
           <div class="big"><small>${CFG.CURRENCY}</small><span data-balance>${p.role === "agent" ? amountOnly(p.balance) : "—"}</span></div>
-          <div class="hint">Top-up to a customer uses this balance · paying a withdrawal adds to it</div></div>
-        <div class="strip">
-          <div><div class="k">Today · top-ups</div><div class="v in" id="tIn">—</div><div class="c" id="tInC"></div></div>
-          <div><div class="k">Today · withdrawals</div><div class="v out" id="tOut">—</div><div class="c" id="tOutC"></div></div>
-        </div>
+</div>
       </div>
       <div class="tiles">
-        <button class="tile deposit" data-go="deposit"><div class="ti">${ICONS.cash}</div><div><b>Deposit</b><br><span>Top up a customer</span></div></button>
-        <button class="tile withdraw" data-go="withdraw"><div class="ti">${ICONS.wallet}</div><div><b>Withdrawal</b><br><span>Pay out a code</span></div></button>
+        <button class="tile deposit" data-go="deposit"><div class="ti">${ICONS.cash}</div><div><b>Deposit</b></div></button>
+        <button class="tile withdraw" data-go="withdraw"><div class="ti">${ICONS.wallet}</div><div><b>Withdrawal</b></div></button>
       </div>
       ${p.role === "agent" ? `<button class="tile-wide ao-tile" data-go="orders"><div class="ti">📦</div>
-        <div class="grow"><b>Orders to deliver</b><br><span>Orders given to you</span></div><span class="ao-count hidden" id="aoCount"></span><em>→</em></button>` : ""}
+        <div class="grow"><b>Orders to deliver</b></div><span class="ao-count hidden" id="aoCount"></span><em>→</em></button>` : ""}
       ${p.role === "agent" ? `<a class="tile-wide" href="agent-deposit.html"><div class="ti">${ICONS.plus}</div>
-        <div class="grow"><b>Deposit to my balance</b><br><span>Pay Premvio & add money to your agent ID</span></div><em>→</em></a>` : ""}
+        <div class="grow"><b>Deposit to my balance</b></div><em>→</em></a>` : ""}
       <div class="recent-head"><b>Last 7 days</b><button class="all-btn" data-go="history">All history <span>→</span></button></div>
       <div id="recent" class="card recent"><div class="loader"></div></div>
     </div>
@@ -1366,7 +1362,7 @@ async function drawRecent() {
   if (error) { box.innerHTML = `<div class="empty">${esc(errMsg(error))}</div>`; return; }
   box.innerHTML = data.length ? txRows(data.slice(0, 15)) +
       (data.length > 15 ? `<button class="all-btn block-all" data-go2="history">See all ${data.length} →</button>` : "")
-    : `<div class="empty" style="padding:22px"><div class="big">🗂️</div>No top-ups or withdrawals in the last 7 days</div>`;
+    : `<div class="empty" style="padding:22px"><div class="big">🗂️</div>Nothing yet</div>`;
   $$("[data-go2]", box).forEach((b) => (b.onclick = () => go(b.dataset.go2)));
 }
 function txRows(list) {
@@ -1431,7 +1427,6 @@ async function viewOrders(v) {
 /* -------- Load money into a customer's account -------- */
 function viewLoad(v) {
   v.innerHTML = `<div class="card">
-    <p class="muted small">Ask the customer for their Member ID (e.g. PV100001), email or phone.</p>
     <form id="find" class="row"><input name="q" placeholder="Member ID, email or phone" required class="grow">
       <button class="btn">Find</button></form>
     <div id="cust"></div>
@@ -1479,7 +1474,6 @@ function showCustomer(c) {
 /* -------- Pay out a withdrawal code -------- */
 function viewWithdraw(v) {
   v.innerHTML = `<div class="card">
-    <p class="muted small">Enter the customer's 8-character withdrawal code.</p>
     <form id="cf" class="row"><input name="code" placeholder="e.g. K7M2QX9A" required class="grow mono" maxlength="8" style="text-transform:uppercase">
       <button class="btn">Check</button></form>
     <div id="wbox"></div>
@@ -1524,7 +1518,6 @@ async function viewHistory(v) {
   if (!A.range) A.range = defaultRange(30);
   const r = A.range;
   v.innerHTML = `<div class="card">
-    <p class="muted small">Customer top-ups and customer withdrawals · ${fmtDay(r.from)} – ${fmtDay(r.to)}</p>
     ${rangeBar(r)}<div id="ah"><div class="loader"></div></div></div>`;
   bindRange(v, r, (nr) => { A.range = nr; viewHistory(v); });
   const [from, to] = rangeISO(r);
