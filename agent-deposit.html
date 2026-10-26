@@ -995,6 +995,12 @@ button.tile-wide { width: 100%; font: inherit; color: var(--text); text-align: l
 .info-field .if-label { font-size: .8rem; color: var(--muted); font-weight: 600; margin-bottom: 4px; }
 .info-field .if-row { display: flex; align-items: center; gap: 10px; }
 .info-field .if-val { flex: 1; font-weight: 700; word-break: break-all; white-space: pre-wrap; }
+/* V50: details shown under a chosen option */
+.opt-info:empty { display: none; }
+.opt-info .info-field { margin-top: 8px; border-style: solid; border-color: rgba(31, 162, 255, .35); }
+.opt-edit { margin-top: 8px; }
+.opt-edit .opt-info-in { margin-top: 6px; min-height: 38px; padding: 8px 10px; font-size: .85rem; resize: vertical; }
+.info-field .if-val { word-break: normal; overflow-wrap: break-word; }
 
 </style>
 <title>Premvio Agent Deposit</title>
@@ -1372,6 +1378,34 @@ function bindRange(root, r, onChange) {
 }
 function fmtDay(s) { return new Date(s + "T00:00:00").toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }); }
 
+/* ---- details that appear when an option is chosen (fd.info = {option: text}) ---- */
+function optInfoBox(f) {
+  const info = f && f.info && typeof f.info === "object" ? f.info : null;
+  if (!info || !Object.keys(info).length) return "";
+  return `<div class="opt-info" data-oi="${esc(f.id)}" data-info="${esc(JSON.stringify(info))}"></div>`;
+}
+function optInfoPaint(box) {
+  const form = box.closest("form"); if (!form) return;
+  let info = {}; try { info = JSON.parse(box.dataset.info || "{}"); } catch (e) {}
+  const els = [...form.querySelectorAll(`[name="f_${box.dataset.oi}"]`)];
+  const picked = els.filter((el) => (el.type === "radio" || el.type === "checkbox" ? el.checked : true)).map((el) => el.value).filter(Boolean);
+  box.innerHTML = picked.filter((v) => info[v]).map((v) => `<div class="info-field"><div class="if-row"><span class="if-val">${esc(info[v])}</span>
+    <button type="button" class="btn sm soft" onclick="copyText(this.dataset.v)" data-v="${esc(info[v])}">${ICONS.copy} Copy</button></div></div>`).join("");
+}
+document.addEventListener("change", (e) => {
+  const n = e.target && e.target.name;
+  if (!n || !n.startsWith("f_")) return;
+  const form = e.target.closest("form"); if (!form) return;
+  form.querySelectorAll(`.opt-info[data-oi="${CSS.escape(n.slice(2))}"]`).forEach(optInfoPaint);
+});
+// boxes added with a value already chosen (editing a cart item, Buy again) show their details straight away
+new MutationObserver((list) => {
+  for (const m of list) for (const node of m.addedNodes) {
+    if (node.nodeType !== 1) continue;
+    (node.matches?.(".opt-info") ? [node] : [...node.querySelectorAll?.(".opt-info") || []]).forEach((b) => setTimeout(() => optInfoPaint(b), 0));
+  }
+}).observe(document.documentElement, { childList: true, subtree: true });
+
 // Method button link: "@premvio", "premvio", "t.me/premvio" or a full https link → a link that opens.
 // Telegram usernames open the Telegram app (https://t.me/…). Returns "" if it can't be used.
 function pvLink(v) {
@@ -1548,7 +1582,7 @@ function dpField(f) {
   let saved = "";
   try { saved = localStorage.getItem("pv_field_" + f.label.toLowerCase()) || ""; } catch (e) {}
   const label = `<label>${esc(f.label)}${f.required ? "" : ' <span class="muted">(optional)</span>'}</label>`;
-  if (f.type === "select") return label + `<select name="${name}" ${req}><option value="">Choose…</option>${(f.options || []).map((o) => `<option ${saved === o ? "selected" : ""}>${esc(o)}</option>`).join("")}</select>`;
+  if (f.type === "select") return label + `<select name="${name}" ${req}><option value="">Choose…</option>${(f.options || []).map((o) => `<option ${saved === o ? "selected" : ""}>${esc(o)}</option>`).join("")}</select>` + optInfoBox(f);
   if (f.type === "textarea") return label + `<textarea name="${name}" ${req} maxlength="500" placeholder="${ph}"></textarea>`;
   if (f.type === "number") return label + `<input type="number" step="any" name="${name}" ${req} placeholder="${ph}" inputmode="decimal">`;
   return label + `<input name="${name}" ${req} maxlength="200" placeholder="${ph}" value="${esc(saved)}">`;
