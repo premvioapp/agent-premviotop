@@ -2101,7 +2101,7 @@ async function countOrders() {
   const n = (data || []).length;
   el.textContent = n; el.classList.toggle("hidden", !n);
 }
-const AO_PAY = { waiting: ["pending", "Waiting for approval"], approved: ["completed", "Approved"], paid: ["completed", "Approved"], rejected: ["rejected", "Not approved"] };
+const AO_PAY = { waiting: ["pending", "Waiting for payment"], approved: ["pending", "Waiting for payment"], paid: ["completed", "Paid"], rejected: ["rejected", "Not paid"] };
 async function viewOrders(v) {
   if (A.me.role !== "agent") { v.innerHTML = `<div class="card"><p class="muted">Only agent accounts get orders to deliver.</p></div>`; return; }
   const done = A.aoTab === "done";
@@ -2128,7 +2128,7 @@ async function viewOrders(v) {
     const o = data.find((x) => x.id == b.dataset.done);
     openModal(`<h2>Delivered order #${o.id}?</h2>
       <p class="muted">Only press this after you delivered <b>${esc(o.product_name)} × ${o.quantity}</b>. The customer sees it as completed.
-        You get <b>${money(o.agent_pay || 0)}</b> after it is approved.</p>
+        Premvio pays you <b>${money(o.agent_pay || 0)}</b> for this delivery.</p>
       <form id="mdf"><label>Picture of the delivery <span class="muted">(optional)</span></label>
         <input type="file" name="pic" accept="image/*">
         <button class="btn success block mt">Yes, delivered</button></form>`, (m) => {
@@ -2139,7 +2139,7 @@ async function viewOrders(v) {
           const url = pic ? await uploadImage(pic, "delivery") : null;
           const { error: er } = await sb.rpc("agent_mark_done", { p_order: o.id, p_note: null, p_proof: url });
           if (er) throw er;
-          closeModal(); toast("Marked done. Waiting for approval.", "success");
+          closeModal(); toast("Marked done.", "success");
           viewOrders(v);
         });
       };
