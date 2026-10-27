@@ -1139,6 +1139,32 @@ body.ag-chat-on .ag-nav { display: none; }
 .ag-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); flex: none; }
 .ag2 .wa.ag-wa { position: fixed; inset: 0; z-index: 50; }
 .badge.agent-chat { background: rgba(255, 200, 61, .16); color: var(--gold); }
+/* ===== V61 login: photo background + moving stars + glass card ===== */
+.auth-hero { position: relative; isolation: isolate; overflow: hidden; min-height: 100vh; min-height: 100dvh; }
+.hero-bg { position: fixed; inset: -4%; z-index: -3; background-size: cover; background-position: center; animation: heroZoom 22s ease-in-out infinite alternate; }
+.hero-shade { position: fixed; inset: 0; z-index: -2;
+  background: radial-gradient(120% 70% at 50% 45%, rgba(4, 10, 32, .15), rgba(4, 10, 32, .55) 70%),
+              linear-gradient(180deg, rgba(4, 10, 32, .35) 0%, rgba(4, 10, 32, .05) 35%, rgba(4, 10, 32, .65) 100%); }
+.hero-stars { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+@keyframes heroZoom { from { transform: scale(1) translateY(0); } to { transform: scale(1.08) translateY(-1.5%); } }
+.auth-hero .auth-box { position: relative; z-index: 1; animation: heroUp .8s cubic-bezier(.2, .8, .2, 1) both .15s; }
+@keyframes heroUp { from { opacity: 0; transform: translateY(40px) scale(.97); } to { opacity: 1; transform: none; } }
+.hero-logo { animation: heroLogo 1s ease both, heroFloat 5s ease-in-out 1s infinite; filter: drop-shadow(0 10px 34px rgba(80, 160, 255, .65)) !important; }
+@keyframes heroLogo { from { opacity: 0; transform: scale(.7); } to { opacity: 1; transform: none; } }
+@keyframes heroFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.hero-tag { color: #fff; font-weight: 700; letter-spacing: .02em; text-shadow: 0 2px 12px rgba(0, 0, 0, .6); margin: 0 0 14px; }
+.card.glass { background: rgba(10, 18, 48, .55); border: 1px solid rgba(255, 255, 255, .16); backdrop-filter: blur(16px) saturate(1.4); -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .12); }
+.card.glass input, .card.glass select, .card.glass textarea { background: rgba(0, 0, 0, .3); border-color: rgba(255, 255, 255, .14); }
+.card.glass .tabs { background: rgba(0, 0, 0, .28); }
+.card.glass label { color: rgba(255, 255, 255, .8); }
+.auth-swap { animation: heroSwap .35s ease both; }
+@keyframes heroSwap { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: none; } }
+.auth-hero .auth-lang { z-index: 2; }
+@media (prefers-reduced-motion: reduce) { .hero-bg, .hero-logo, .auth-hero .auth-box, .auth-swap { animation: none !important; } }
+/* stars + smileys behind the app (V61) */
+.app-stars { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: .75; }
+.app.cust-app { position: relative; z-index: 1; }
 
 </style>
 <title>Premvio Agent</title>
@@ -1776,9 +1802,9 @@ function start(p) {
       <div class="ag-card">
         <div class="row between"><button class="ag-pill" id="eye">${AI.eye}<span>Hide data</span></button>
           <button class="ag-ico" data-go="history" aria-label="Transactions">${AI.doc}</button></div>
-        ${p.role === "agent" ? `<div class="ag-lbl">Payout limit</div>
-        <div class="ag-big"><span data-limit>—</span></div>
-        <div class="ag-bal">Balance: <span data-balance>—</span></div>
+        ${p.role === "agent" ? `<div class="ag-lbl">Balance</div>
+        <div class="ag-big"><span data-balance>—</span></div>
+        <div class="ag-bal">Payout limit: <span data-limit>—</span></div>
         <div class="ag-bar"><i id="limBar"></i></div>` : `<div class="ag-lbl">Admin using agent desk</div><div class="ag-big">—</div>`}
       </div>
       <div class="ag-btns">
