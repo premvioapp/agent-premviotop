@@ -1189,6 +1189,8 @@ body.ag-chat-on .ag-nav { display: none; }
 .dr-row { display: grid; grid-template-columns: 1fr 1.4fr auto; gap: 6px; align-items: center; margin-top: 6px; }
 .dr-row input { margin: 0; }
 @media (max-width: 420px) { .dr-row { grid-template-columns: 1fr auto; } .dr-row .dr-v { grid-column: 1 / 2; grid-row: 2; } }
+.pm-conv { margin-top: 6px; font-size: .9rem; padding: 8px 12px; border-radius: 10px; background: rgba(31, 162, 255, .1); border: 1px solid rgba(31, 162, 255, .3); }
+.pm-conv b { color: var(--blue); font-size: 1rem; }
 
 </style>
 <title>Premvio Agent Deposit</title>
@@ -1669,6 +1671,26 @@ function pmRowsHtml(m) {
     <div class="grow"><div class="pm-row-l">${esc(r.label)}</div><div class="pm-row-v">${esc(r.value)}</div></div>
     ${r.value ? `<button type="button" class="btn sm soft" onclick="copyText(this.dataset.v)" data-v="${esc(r.value)}">${ICONS.copy} Copy</button>` : ""}</div>`).join("")}</div>`;
 }
+// V70: deposit method in another currency (admin sets e.g. USD, 1 USD = 151 NPR)
+function pmCur(m) {
+  const c = String((m && m.pay_currency) || "").trim(), r = Number(m && m.pay_rate);
+  return c && r > 0 ? { cur: c, rate: r } : null;
+}
+function pmPayAmt(npr, rate) {   // same as the server: NPR ÷ rate, rounded UP to 2 decimals
+  const n = Number(npr), r = Number(rate);
+  if (!(n > 0) || !(r > 0)) return null;
+  return Math.ceil(Math.round((n / r) * 100 * 1e6) / 1e6) / 100;
+}
+function fmtCur(v, cur) {
+  return Number(v).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " " + cur;
+}
+function pmRateText(c) { return `1 ${c.cur} = ${CFG.CURRENCY} ${Number(c.rate).toLocaleString("en-US", { maximumFractionDigits: 4 })}`; }
+// small live line under an NPR amount box: "You pay 33.12 USD"
+function pmConvBind(input, out, c) {
+  const paint = () => { const p = pmPayAmt(input.value, c.rate);
+    out.innerHTML = p ? `You pay <b>${esc(fmtCur(p, c.cur))}</b> <span class="muted">· ${esc(pmRateText(c))}</span>` : `<span class="muted">${esc(pmRateText(c))}</span>`; };
+  input.addEventListener("input", paint); paint();
+}
 // V69: red notice the admin writes per deposit method
 function pmNoticeHtml(m) {
   const t = String((m && m.notice) || "").trim();
@@ -1896,7 +1918,7 @@ async function drawMine() {
 function method(m) {
   const s = $("#screen");
   const fields = m.fields || [];
-  const proof = m.proof_mode || "required";
+  const proof = m.proof_mode || "required", cur = pmCur(m);
   s.className = "slide-in";
   s.innerHTML = `<div class="screen-head"><button class="back-btn" id="back" aria-label="Back">←</button>
       <h2 style="margin:0">${esc(m.name)}</h2></div>
@@ -1911,6 +1933,9 @@ function method(m) {
         <button class="btn sm soft" onclick="copyText('${esc(DP.me.member_id)}')">${ICONS.copy} My ID ${esc(DP.me.member_id)}</button>
       </div>
       <form id="dpf" class="mt">
+        ${cur ? `<label>Amount (${CFG.CURRENCY})</label>
+        <input type="number" name="amount" min="1" step="0.01" required inputmode="decimal" placeholder="e.g. 5000">
+        <div class="pm-conv" id="pmConv"></div>` : ""}
         ${fields.map(dpField).join("")}
         ${proof === "off" ? "" : `<label>Payment screenshot ${proof === "required" ? `<span style="color:var(--red)">*</span>` : `<span class="muted">(optional)</span>`}</label>
         <input type="file" name="proof" accept="image/*" ${proof === "required" ? "required" : ""}>
@@ -1921,10 +1946,13 @@ function method(m) {
   $("#back").onclick = home;
   if ($("#cpDet")) $("#cpDet").onclick = () => copyText(m.details);
   const f = $("#dpf");
+  if (cur) pmConvBind(f.amount, $("#pmConv"), cur);
   if (f.proof) f.proof.onchange = () => { const fl = f.proof.files[0]; if (fl) { $("#proofPrev").src = URL.createObjectURL(fl); $("#proofPrev").classList.remove("hidden"); } };
   f.onsubmit = (e) => {
     e.preventDefault();
     const file = f.proof?.files?.[0] || null;
+    const amt = cur ? Number(f.amount.value) : null;
+    if (cur && !(amt > 0)) return toast("Enter the amount.", "error");
     if (proof === "required" && !file) return toast("Please add a screenshot of your payment.", "error");
     const form = {};
     for (const fd of fields) form[fd.id] = (f.elements["f_" + fd.id]?.value || "").trim();
@@ -1937,7 +1965,8 @@ function method(m) {
         const { error: upErr } = await sb.storage.from("proofs").upload(path, blob, { contentType: blob.type || "image/jpeg", upsert: false });
         if (upErr) throw upErr;
       }
-      const { data, error } = await sb.rpc("agent_request_deposit", { p_method: m.id, p_form: form, p_proof: path });
+      const { data, error } = await sb.rpc("agent_request_deposit", cur ? { p_method: m.id, p_form: form, p_proof: path, p_amount: amt }
+        : { p_method: m.id, p_form: form, p_proof: path });
       if (error) throw error;
       try { fields.forEach((fd) => { if (form[fd.id] && fd.type !== "textarea") localStorage.setItem("pv_field_" + fd.label.toLowerCase(), form[fd.id]); }); } catch (er) {}
       done(data, m);
