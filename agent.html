@@ -2126,23 +2126,12 @@ async function viewOrders(v) {
     </div>`).join("");
   $$("[data-done]", box).forEach((b) => (b.onclick = async () => {
     const o = data.find((x) => x.id == b.dataset.done);
-    openModal(`<h2>Delivered order #${o.id}?</h2>
-      <p class="muted">Only press this after you delivered <b>${esc(o.product_name)} × ${o.quantity}</b>. The customer sees it as completed.
-        Premvio pays you <b>${money(o.agent_pay || 0)}</b> for this delivery.</p>
-      <form id="mdf"><label>Picture of the delivery <span class="muted">(optional)</span></label>
-        <input type="file" name="pic" accept="image/*">
-        <button class="btn success block mt">Yes, delivered</button></form>`, (m) => {
-      $("#mdf", m).onsubmit = (e) => {
-        e.preventDefault();
-        busy($("button", e.target), async () => {
-          const pic = e.target.pic.files[0];
-          const url = pic ? await uploadImage(pic, "delivery") : null;
-          const { error: er } = await sb.rpc("agent_mark_done", { p_order: o.id, p_note: null, p_proof: url });
-          if (er) throw er;
-          closeModal(); toast("Marked done.", "success");
-          viewOrders(v);
-        });
-      };
+    if (!(await confirmBox(`Delivered order #${o.id}?`, `Only confirm after you delivered <b>${esc(o.product_name)} × ${o.quantity}</b>. Premvio pays you <b>${money(o.agent_pay || 0)}</b> for this delivery.`, "Yes, delivered"))) return;
+    busy(b, async () => {
+      const { error: er } = await sb.rpc("agent_mark_done", { p_order: o.id, p_note: null, p_proof: null });
+      if (er) throw er;
+      toast("Marked done.", "success");
+      viewOrders(v);
     });
   }));
 }
